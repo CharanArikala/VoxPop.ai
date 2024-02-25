@@ -1,0 +1,113 @@
+
+version: "2"
+name: "Google playstore reviews to Tickets"
+description: "Creates tickets from Google playstore reviews and categorize them into `spam` or `legit` and than the legit tickets go through a filter of `bug`, `feedback` or `question`."
+
+service_account:
+  display_name: Analyze Google Playstore Reviews 
+
+
+keyrings:
+  organization:
+    - name: firework_api_key_here
+      description: This is the API key for Fireworks models
+      types:
+        - snap_in_secret
+      display_name: Fireworks API Key
+
+    - name: openai_api_key_here
+      description: This is the API key for OpenAI models
+      types:
+        - snap_in_secret
+      display_name: OpenAI API Key
+  
+inputs:
+  organization:
+    - name: app_id
+      description: "The Google Play id of the application (the ?id= parameter on the url)."
+      field_type: text
+      is_required: true
+      default_value: "com.adobe.reader"
+      ui:
+        display_name: Application ID
+    
+    - name: language
+      description: "Specific language reviews"
+      field_type: text
+      is_required: true
+      default_value: "en"
+      ui:
+        display_name: Language
+
+    - name: country
+      description: "Specific country reviews"
+      field_type: text
+      is_required: true
+      default_value: "in"
+      ui:
+        display_name: Country ("Region")
+    
+    - name: default_part_id
+      description: "Default part under which to create tickets."
+      field_type: id
+      id_type:
+        - product
+        - capability
+        - feature
+        - enhancement
+      is_required: true
+      default_value: "don:core:dvrv-us-1:devo/xxxx:product/x"
+      ui:
+        display_name: Default Part
+
+    - name: default_owner_id
+      description: "Default owner of the tickets."
+      field_type: id
+      id_type:
+        - devu
+      is_required: true
+      default_value: "don:identity:dvrv-us-1:devo/xxxx:devu/x"
+      ui:
+        display_name: Default Owner
+
+    - name: llm_model_to_use
+      description: "Which LLM model to use for the review categorization. Not all might work perfectly, generally prefer a larger model with >= 7B params"
+      field_type: enum
+      allowed_values:
+        - mixtral-8x7b-instruct
+        - llama-v2-13b-code-instruct
+      is_required: true
+      default_value: "mixtral-8x7b-instruct"
+      ui:
+        display_name: LLM Model to use.
+
+tags:
+  - name: spam
+    description: "This is a spam"
+  - name: legit
+    description: "This is a legit"
+  - name: bug
+    description: "This is a bug"
+  - name: feedback
+    description: "This is a feedback"
+  - name: question
+    description: "This is a question"
+  - name: failed_to_infer_category
+    description: "Failed to infer category"
+
+commands:
+  - name: playstore_reviews
+    namespace: devrev
+    description: Fetches reviews from Google Playstore and creates tickets
+    surfaces: 
+      - surface: discussions
+        object_types:
+          - snap_in
+    usage_hint: "/playstore_reviews [number of reviews to fetch]"
+    function: on_work_creation
+
+
+functions:
+  - name: on_work_creation
+    description: function to trigger on work creation
+
