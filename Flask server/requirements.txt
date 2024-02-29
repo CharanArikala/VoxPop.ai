@@ -1,5 +1,7 @@
-app-store-scraper
-google-play-scraper
-flask
+langchain
+langchain-openai
+app-store-scraper==0.3.5
+google-play-scraper==1.2.6
+flask==2.3.3
 gunicorn
 Flask-Cors

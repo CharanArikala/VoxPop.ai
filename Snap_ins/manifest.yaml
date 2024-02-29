@@ -7,19 +7,19 @@ service_account:
   display_name: Analyze Google Playstore Reviews 
 
 
-keyrings:
-  organization:
-    - name: firework_api_key_here
-      description: This is the API key for Fireworks models
-      types:
-        - snap_in_secret
-      display_name: Fireworks API Key
+# keyrings:
+#   organization:
+#     - name: firework_api_key_here
+#       description: This is the API key for Fireworks models
+#       types:
+#         - snap_in_secret
+#       display_name: Fireworks API Key
 
-    - name: openai_api_key_here
-      description: This is the API key for OpenAI models
-      types:
-        - snap_in_secret
-      display_name: OpenAI API Key
+#     - name: openai_api_key_here
+#       description: This is the API key for OpenAI models
+#       types:
+#         - snap_in_secret
+#       display_name: OpenAI API Key
   
 inputs:
   organization:

@@ -2,8 +2,11 @@ from flask import Blueprint
 from flask import request
 from flask import jsonify
 from app_store_scraper import AppStore
+from tags import AssignTags
 
 app_store_blueprint = Blueprint('app_store_blueprint', __name__)
+
+assign_tag = AssignTags()
 
 @app_store_blueprint.route('/test', methods=['GET'])
 def test():
@@ -22,12 +25,21 @@ def GetReviewsAppStore():
 
     reviews = app_store.reviews
     
+    i = 0
     for r_id in reviews:
-        r = {'name':None, 'title':None, 'review':None}
-        r['name'] = r_id['userName']
-        r['title'] = r_id['title']
-        r['review'] = r_id['review']
-        review.append(r)
+        if i < data.get('count'):
+            r = {'name':None, 'title':None, 'review':None, 'tags':None}
+            r['name'] = r_id['userName']
+            r['title'] = r_id['title']
+            r['review'] = r_id['review']
+            tags = assign_tag.AppStoreReview(question=r_id['review'])
+            r['tags'] = tags
+            review.append(r)
+            i+=1
+        else:
+            break
+        
+
 
     return jsonify(reviews=review), 200
 
